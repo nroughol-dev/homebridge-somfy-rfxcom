@@ -1,0 +1,57 @@
+{
+  "pluginAlias": "RFXCom",
+  "pluginType": "platform",
+  "singular": true,
+  "schema": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "title": "Name",
+        "type": "string",
+        "default": "RFXCom",
+        "required": true
+      },
+      "tty": {
+        "title": "Serial Port",
+        "type": "string",
+        "default": "/dev/ttyUSB0",
+        "description": "Path to the RFXtrx USB device."
+      },
+      "debug": {
+        "title": "Debug Mode",
+        "type": "boolean",
+        "default": false,
+        "description": "Enable debug logging for the RFXtrx communication."
+      },
+      "rfyRemotes": {
+        "title": "RFY Remotes",
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "title": "Name",
+              "type": "string",
+              "required": true,
+              "description": "Display name of the remote in HomeKit."
+            },
+            "deviceID": {
+              "title": "Device ID",
+              "type": "string",
+              "required": true,
+              "pattern": "^0x[0-9a-fA-F]+/\\d+$",
+              "description": "Remote address and unit code (e.g. 0x000001/1). Found in RFXMngr."
+            },
+            "openCloseSeconds": {
+              "title": "Open/Close Duration",
+              "type": "integer",
+              "default": 5,
+              "minimum": 1,
+              "description": "Seconds for the blinds/awning to fully open or close."
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "name": "homebridge-rfxcom",
+  "version": "1.0.6",
+  "description": "Homebridge plugin for RFXtrx433(E) transceivers.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "rfyerase": "erase.js",
+    "rfyprogram": "program.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/glefand/homebridge-rfxcom.git"
+  },
+  "author": "Fork from John Hurliman <jhurliman@jhurliman.org>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/glefand/homebridge-rfxcom/issues"
+  },
+  "homepage": "https://github.com/glefand/homebridge-rfxcom#readme",
+  "keywords": [
+    "homebridge-plugin",
+    "rfxcom",
+    "rfxtrx",
+    "rfxtrx433",
+    "rfxtrx433e",
+    "433",
+    "somfy",
+    "rts",
+    "rfy",
+    "homebridge",
+    "homekit",
+    "window",
+    "blinds",
+    "awning",
+    "remote"
+  ],
+  "engines": {
+    "homebridge": "^1.6.0 || ^2.0.0",
+    "node": "^22.12.0 || ^24.0.0"
+  },
+  "dependencies": {
+    "rfxcom": ">=2.1.0"
+  }
+}
