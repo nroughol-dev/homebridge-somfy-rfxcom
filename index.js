@@ -1,7 +1,7 @@
 const rfxcom = require('rfxcom')
 
-const PLUGIN_ID = 'homebridge-rfxcom'
-const PLUGIN_NAME = 'RFXCom'
+const PLUGIN_ID = 'homebridge-somfy-rfxcom'
+const PLUGIN_NAME = 'SomfyRFXCom'
 const DEFAULT_OPEN_CLOSE_SECONDS = 5
 
 let Accessory, Service, Characteristic, UUIDGen
@@ -17,7 +17,7 @@ module.exports = function(homebridge) {
 
 function RFXComPlatform(log, config, api) {
   this.log = log
-  this.config = config || { platform: 'RFXCom' }
+  this.config = config || { platform: PLUGIN_NAME }
   this.tty = this.config.tty || '/dev/ttyUSB0'
   this.debug = this.config.debug || false
 
@@ -25,12 +25,8 @@ function RFXComPlatform(log, config, api) {
   this.rfyRemotes = Array.isArray(rfyRemotes) ? rfyRemotes : []
 
   this.accessories = {}
-
-  this.rfxtrx = new rfxcom.RfxCom(this.tty, { debug: this.debug })
-  this.rfy = new rfxcom.Rfy(this.rfxtrx, rfxcom.rfy.RFY)
-
-  this.rfxtrx.on('disconnect', () => this.log('ERROR: RFXtrx disconnect'))
-  this.rfxtrx.on('connectfailed', () => this.log('ERROR: RFXtrx connect fail'))
+  this.rfxtrx = null
+  this.rfy = null
 
   if (api) {
     this.api = api
@@ -53,39 +49,42 @@ RFXComPlatform.prototype.configureAccessory = function(accessory) {
 
 // Method to setup accesories from config.json
 RFXComPlatform.prototype.didFinishLaunching = function() {
-  // Add or update accessory in HomeKit
-  if (this.rfyRemotes.length) {
-    // Compare local config against RFXCom-registered remotes
-    this.listRFYRemotes()
-      .then(deviceRemotes => {
-        this.log(`Received ${deviceRemotes.length} remote(s) from device`)
-
-        this.rfyRemotes.forEach(remote => {
-          // Handle different capitalizations of deviceID
-          remote.deviceID = remote.deviceID || remote.deviceId
-
-          const deviceID = remote.deviceID
-          const device = deviceRemotes.find(dR => deviceID === dR.deviceId)
-
-          if (device) {
-            // Remote found on the RFXCom device
-            this.addRFYRemote(remote, device)
-            this.log(`Added accessories for RFY remote ${remote.deviceID}`)
-          } else {
-            // No remote found on device
-            const msg = deviceRemotes.map(dR => `${dR.deviceId}`).join(', ')
-            this.log(`ERROR: RFY remote ${deviceID} not found. Found: ${msg}`)
-          }
-        })
-      })
-      .catch(err => {
-        this.log(`UNHANDLED ERROR: ${err}`)
-      })
-  } else {
-    // FIXME: Setup mode
-    this.log(`WARN: No RFY remotes configured`)
+  if (!this.rfyRemotes.length) {
+    this.log('No RFY remotes configured. Add remotes via the Homebridge UI to get started.')
     this.removeAccessories()
+    return
   }
+
+  this.rfxtrx = new rfxcom.RfxCom(this.tty, { debug: this.debug })
+  this.rfy = new rfxcom.Rfy(this.rfxtrx, rfxcom.rfy.RFY)
+
+  this.rfxtrx.on('disconnect', () => this.log('ERROR: RFXtrx disconnect'))
+  this.rfxtrx.on('connectfailed', () => this.log('ERROR: RFXtrx connect fail'))
+
+  // Compare local config against RFXCom-registered remotes
+  this.listRFYRemotes()
+    .then(deviceRemotes => {
+      this.log(`Received ${deviceRemotes.length} remote(s) from device`)
+
+      this.rfyRemotes.forEach(remote => {
+        // Handle different capitalizations of deviceID
+        remote.deviceID = remote.deviceID || remote.deviceId
+
+        const deviceID = remote.deviceID
+        const device = deviceRemotes.find(dR => deviceID === dR.deviceId)
+
+        if (device) {
+          this.addRFYRemote(remote, device)
+          this.log(`Added accessories for RFY remote ${remote.deviceID}`)
+        } else {
+          const msg = deviceRemotes.map(dR => `${dR.deviceId}`).join(', ')
+          this.log(`ERROR: RFY remote ${deviceID} not found. Found: ${msg}`)
+        }
+      })
+    })
+    .catch(err => {
+      this.log(`UNHANDLED ERROR: ${err}`)
+    })
 }
 
 RFXComPlatform.prototype.listRFYRemotes = function() {
@@ -167,7 +166,7 @@ RFXComPlatform.prototype.addRFYRemoteSwitch = function(remote, device, type) {
     .onGet(() => accessory.context.isOn)
     .onSet((value) => {
       if (!value || type === 'Stop') {
-        console.log(`RFY STOP ${remote.deviceID}`)
+        this.log(`RFY STOP ${remote.deviceID}`)
         this.rfy.stop(remote.deviceID)
 
         setTimeout(() => {
@@ -180,11 +179,11 @@ RFXComPlatform.prototype.addRFYRemoteSwitch = function(remote, device, type) {
 
       switch (type) {
         case 'Up':
-          console.log(`RFY UP ${remote.deviceID}`)
+          this.log(`RFY UP ${remote.deviceID}`)
           this.rfy.up(remote.deviceID)
           break
         case 'Down':
-          console.log(`RFY DOWN ${remote.deviceID}`)
+          this.log(`RFY DOWN ${remote.deviceID}`)
           this.rfy.down(remote.deviceID)
           break
       }
@@ -232,5 +231,5 @@ RFXComPlatform.prototype.removeAccessory = function(accessory) {
 
 // Method to remove all accessories from HomeKit
 RFXComPlatform.prototype.removeAccessories = function() {
-  this.accessories.forEach(id => this.removeAccessory(this.accessories[id]))
+  Object.values(this.accessories).forEach(accessory => this.removeAccessory(accessory))
 }

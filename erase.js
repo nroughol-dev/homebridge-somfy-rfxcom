@@ -1,10 +1,31 @@
 #!/usr/bin/env node
-'use strict';
+'use strict'
 
-const rfxcom = require('node_modules/rfxcom');
-rfxtrx = new rfxcom.RfxCom('/dev/ttyRFXCOM', {debug: true}),
-   rfy = new rfxcom.Rfy(rfxtrx, rfxcom.rfy.RFY);
+// Standalone helper to erase an RFY remote address from a Somfy motor.
+// Usage: node erase.js <tty> <deviceID>
+//   e.g. node erase.js /dev/ttyUSB0 0x010000/1
 
-rfy.erase('0x09BC01/1', function(err, res, sequenceNumber) {
-  if (!err) console.log('complete');
-});
+const rfxcom = require('rfxcom')
+
+const tty = process.argv[2] || '/dev/ttyUSB0'
+const deviceID = process.argv[3]
+
+if (!deviceID) {
+  console.error('Usage: node erase.js <tty> <deviceID>')
+  console.error('  e.g. node erase.js /dev/ttyUSB0 0x010000/1')
+  process.exit(1)
+}
+
+const rfxtrx = new rfxcom.RfxCom(tty, { debug: true })
+const rfy = new rfxcom.Rfy(rfxtrx, rfxcom.rfy.RFY)
+
+rfxtrx.initialise(() => {
+  rfy.erase(deviceID, (err) => {
+    if (err) {
+      console.error('Erase failed:', err)
+      process.exit(1)
+    }
+    console.log('complete')
+    process.exit(0)
+  })
+})

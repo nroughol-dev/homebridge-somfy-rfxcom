@@ -1,17 +1,17 @@
-# @nroughol/homebridge-rfxcom
+# homebridge-somfy-rfxcom
 
-Homebridge plugin for [RFXtrx433(E)](http://www.rfxcom.com/RFXtrx433E-USB-43392MHz-Transceiver/en) transceivers. Control RFY (Somfy RTS) blinds, awnings, and gates through HomeKit.
+Homebridge plugin for controlling [Somfy RTS](https://www.somfy.com/) blinds, awnings, and gates through HomeKit, via an [RFXtrx433(E)](http://www.rfxcom.com/RFXtrx433E-USB-43392MHz-Transceiver/en) USB transceiver.
 
-Other RFXcom plugins exist with broader feature sets. This one was rewritten with motorized Somfy RTS gates in mind and is, in my experience, the most reliable option for that use case.
+This fork was rewritten with motorized Somfy RTS gates in mind and is, in my experience, the most reliable option for that use case. It also works with RFY blinds and awnings.
 
-Fork of [glefand/homebridge-rfxcom](https://github.com/glefand/homebridge-rfxcom), originally from [jhurliman/homebridge-rfxcom](https://github.com/jhurliman/homebridge-rfxcom).
+Originally based on [glefand/homebridge-rfxcom](https://github.com/glefand/homebridge-rfxcom) and [jhurliman/homebridge-rfxcom](https://github.com/jhurliman/homebridge-rfxcom).
 
-## What's New in This Fork
+## Features
 
 - **Homebridge v2.0 support** — fully compatible with Homebridge 2.0
-- **Homebridge UI configuration** — configure the plugin directly from the Homebridge GUI (no more manual JSON editing)
+- **Homebridge UI configuration** — configure the plugin directly from the Homebridge UI (no manual JSON editing required)
 - **Modern characteristic API** — uses `onGet`/`onSet` for reliable accessory restoration after restarts
-- **Node 22/24 support**
+- **Node 22 / 24 support**
 
 ## Compatibility
 
@@ -23,8 +23,10 @@ Fork of [glefand/homebridge-rfxcom](https://github.com/glefand/homebridge-rfxcom
 ## Installation
 
 ```bash
-npm install -g @nroughol/homebridge-rfxcom
+npm install -g homebridge-somfy-rfxcom
 ```
+
+Or install via the **Homebridge UI** by searching for `homebridge-somfy-rfxcom`.
 
 ## Configuration
 
@@ -34,8 +36,8 @@ This plugin can be configured through the **Homebridge UI**. Alternatively, add 
 {
   "platforms": [
     {
-      "platform": "RFXCom",
-      "name": "RFXCom",
+      "platform": "SomfyRFXCom",
+      "name": "Somfy RFXCom",
       "tty": "/dev/ttyUSB0",
       "debug": false,
       "rfyRemotes": [
@@ -54,7 +56,7 @@ This plugin can be configured through the **Homebridge UI**. Alternatively, add 
 
 | Option | Required | Default | Description |
 |---|---|---|---|
-| `platform` | Yes | — | Must be `RFXCom` |
+| `platform` | Yes | — | Must be `SomfyRFXCom` |
 | `name` | Yes | — | Display name for the platform |
 | `tty` | No | `/dev/ttyUSB0` | Path to the RFXtrx USB device |
 | `debug` | No | `false` | Enable debug logging |
@@ -65,11 +67,15 @@ This plugin can be configured through the **Homebridge UI**. Alternatively, add 
 |---|---|---|---|
 | `name` | Yes | — | Display name in HomeKit |
 | `deviceID` | Yes | — | Remote address and unit code (e.g. `0x010000/1`). Found in RFXMngr (Windows). |
-| `openCloseSeconds` | No | `5` | Seconds for the blinds/awning to fully open or close |
+| `openCloseSeconds` | No | `5` | Seconds for the blinds/awning/gate to fully open or close |
 
 ## How It Works
 
-Each RFY remote creates three switches in HomeKit: **Up**, **Down**, and **Stop**. The switches auto-reset after `openCloseSeconds` to reflect that the movement has completed.
+Each RFY remote creates three switches in HomeKit: **Up**, **Down**, and **Stop**. The active switch auto-resets after `openCloseSeconds` to reflect that the movement has completed.
+
+## Programming a New Remote
+
+Before a Somfy device will respond to commands from your RFXtrx, the device's address must be programmed into the motor. Use [RFXMngr](http://www.rfxcom.com/epages/78165469.sf/en_GB/?ObjectPath=/Shops/78165469/Categories/Downloads) (Windows) to assign and program a new remote address, then use that address as the `deviceID` in your config.
 
 ## License
 

@@ -1,15 +1,18 @@
 {
-  "pluginAlias": "RFXCom",
+  "pluginAlias": "SomfyRFXCom",
   "pluginType": "platform",
   "singular": true,
+  "headerDisplay": "Homebridge plugin for controlling Somfy RTS blinds, awnings, and gates via an RFXtrx433(E) transceiver.",
+  "footerDisplay": "For help, see the [README](https://github.com/nroughol-dev/homebridge-somfy-rfxcom#readme).",
   "schema": {
     "type": "object",
     "properties": {
       "name": {
         "title": "Name",
         "type": "string",
-        "default": "RFXCom",
-        "required": true
+        "default": "Somfy RFXCom",
+        "required": true,
+        "description": "Display name for the platform."
       },
       "tty": {
         "title": "Serial Port",
@@ -47,7 +50,7 @@
               "type": "integer",
               "default": 5,
               "minimum": 1,
-              "description": "Seconds for the blinds/awning to fully open or close."
+              "description": "Seconds for the blinds/awning/gate to fully open or close."
             }
           }
         }

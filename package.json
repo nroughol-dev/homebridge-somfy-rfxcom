@@ -1,23 +1,24 @@
 {
-  "name": "@nroughol/homebridge-rfxcom",
-  "version": "1.0.6",
-  "description": "Homebridge plugin for RFXtrx433(E) transceivers.",
+  "name": "homebridge-somfy-rfxcom",
+  "displayName": "Somfy RFXcom",
+  "version": "2.0.0",
+  "description": "Homebridge plugin for controlling Somfy RTS blinds, awnings, and gates via an RFXtrx433(E) transceiver.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "rfyerase": "erase.js",
-    "rfyprogram": "program.js"
+    "rfyerase": "node erase.js",
+    "rfyprogram": "node program.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nroughol-dev/homebridge-rfxcom.git"
+    "url": "git+https://github.com/nroughol-dev/homebridge-somfy-rfxcom.git"
   },
   "author": "Nicolas Roughol",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/nroughol-dev/homebridge-rfxcom/issues"
+    "url": "https://github.com/nroughol-dev/homebridge-somfy-rfxcom/issues"
   },
-  "homepage": "https://github.com/nroughol-dev/homebridge-rfxcom#readme",
+  "homepage": "https://github.com/nroughol-dev/homebridge-somfy-rfxcom#readme",
   "keywords": [
     "homebridge-plugin",
     "rfxcom",
@@ -33,6 +34,7 @@
     "window",
     "blinds",
     "awning",
+    "gate",
     "remote"
   ],
   "engines": {
