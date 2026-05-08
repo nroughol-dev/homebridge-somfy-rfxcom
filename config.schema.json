@@ -6,12 +6,12 @@
   "footerDisplay": "For help, see the [README](https://github.com/nroughol-dev/homebridge-somfy-rfxcom#readme).",
   "schema": {
     "type": "object",
+    "required": ["name"],
     "properties": {
       "name": {
         "title": "Name",
         "type": "string",
         "default": "Somfy RFXCom",
-        "required": true,
         "description": "Display name for the platform."
       },
       "tty": {
@@ -31,17 +31,16 @@
         "type": "array",
         "items": {
           "type": "object",
+          "required": ["name", "deviceID"],
           "properties": {
             "name": {
               "title": "Name",
               "type": "string",
-              "required": true,
               "description": "Display name of the remote in HomeKit."
             },
             "deviceID": {
               "title": "Device ID",
               "type": "string",
-              "required": true,
               "pattern": "^0x[0-9a-fA-F]+/\\d+$",
               "description": "Remote address and unit code (e.g. 0x000001/1). Found in RFXMngr."
             },
