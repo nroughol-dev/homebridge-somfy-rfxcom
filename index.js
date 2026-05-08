@@ -118,10 +118,11 @@ RFXComPlatform.prototype.addRFYRemoteSwitch = function(remote, device, type) {
   if (!accessory) {
     this.log(`Creating new accessory: ${switchID}`)
     const uuid = UUIDGen.generate(switchID)
-    accessory = new Accessory(remote.name, uuid)
+    accessory = new Accessory(name, uuid)
     isNew = true
   } else {
     this.log(`Restoring cached accessory: ${switchID}`)
+    accessory.displayName = name
   }
 
   this.accessories[switchID] = accessory
@@ -136,8 +137,12 @@ RFXComPlatform.prototype.addRFYRemoteSwitch = function(remote, device, type) {
 
   remote.switches[type] = accessory
 
-  if (!accessory.getService(Service.Switch)) {
-    accessory.addService(Service.Switch, name)
+  let switchService = accessory.getService(Service.Switch)
+  if (!switchService) {
+    switchService = accessory.addService(Service.Switch, name)
+  } else {
+    switchService.displayName = name
+    switchService.updateCharacteristic(Characteristic.Name, name)
   }
 
   accessory
