@@ -1,10 +1,19 @@
 # homebridge-somfy-rfxcom
 
+[![verified-by-homebridge](https://img.shields.io/badge/homebridge-verified-blueviolet?color=%23491F59&style=for-the-badge&logoColor=%23FFFFFF&logo=homebridge)](https://github.com/homebridge/homebridge/wiki/Verified-Plugins)
+
 Homebridge plugin for controlling [Somfy RTS](https://www.somfy.com/) blinds, awnings, and gates through HomeKit, via an [RFXtrx433(E)](http://www.rfxcom.com/RFXtrx433E-USB-43392MHz-Transceiver/en) USB transceiver.
 
 This fork was rewritten with motorized Somfy RTS gates in mind and is, in my experience, the most reliable option for that use case. It also works with RFY blinds and awnings.
 
 Originally based on [glefand/homebridge-rfxcom](https://github.com/glefand/homebridge-rfxcom) and [jhurliman/homebridge-rfxcom](https://github.com/jhurliman/homebridge-rfxcom).
+
+## What's new
+
+### 2.0.3
+
+- Verified by Homebridge
+- Added a donation link (PayPal) — shown as a ❤️ Donate button on the Homebridge UI tile
 
 ## Features
 

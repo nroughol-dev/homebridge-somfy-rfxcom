@@ -1,7 +1,7 @@
 {
   "name": "homebridge-somfy-rfxcom",
   "displayName": "Somfy RFXcom",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "Homebridge plugin for controlling Somfy RTS blinds, awnings, and gates via an RFXtrx433(E) transceiver.",
   "main": "index.js",
   "scripts": {
@@ -43,5 +43,11 @@
   },
   "dependencies": {
     "rfxcom": ">=2.1.0"
-  }
+  },
+  "funding": [
+    {
+      "type": "paypal",
+      "url": "https://paypal.me/nroughol"
+    }
+  ]
 }
